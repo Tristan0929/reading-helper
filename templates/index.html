@@ -319,8 +319,8 @@
             em { color: #0047AB; font-style: italic; }
 
             /* 词汇精析后强制换页，句子赏析从新页开始 */
-            .footnotes {
-                page-break-after: always;
+            #result h2:nth-of-type(3) {
+                page-break-before: always;
             }
             
             /* 打印时脚注卡片简化 */
