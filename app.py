@@ -59,6 +59,7 @@ def analyze():
     data = request.get_json()
     article = data.get('article', '').strip()
     api_key = data.get('api_key', '').strip()
+    model = data.get('model', 'deepseek-chat').strip() or 'deepseek-chat'
 
     if not article:
         return jsonify({'error': '文章不能为空'}), 400
@@ -69,7 +70,7 @@ def analyze():
 
     try:
         response = client.chat.completions.create(
-            model="deepseek-reasoner",
+            model=data.get('model', 'deepseek-chat'),
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": article}
