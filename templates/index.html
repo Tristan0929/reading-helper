@@ -203,6 +203,66 @@
             overflow-wrap: break-word;
         }
 
+        /* ──────────────── 以下为结果内部排版美化 ──────────────── */
+
+        /* 二级标题：板块之间有明显间隔 */
+        #result h2 {
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid #e0ded9;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* 三级标题：句子赏析中的每个句子标题 */
+        #result h3 {
+            margin-top: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 段落间距 */
+        #result p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ──────────────── 脚注美化（卡片式） ──────────────── */
+        .footnotes {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #ddd;
+        }
+
+        .footnotes ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footnotes li {
+            background: #fafaf9;
+            border: 1px solid #eae7e2;
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            transition: background 0.2s;
+        }
+
+        .footnotes li:hover {
+            background: #f5f3f0;
+        }
+
+        .footnotes li p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .footnote-ref {
+            text-decoration: none;
+            color: #444;
+            font-weight: 500;
+        }
+
         /* 操作按钮容器 */
         .action-bar {
             display: flex;
@@ -230,23 +290,6 @@
             border-color: #ccc;
         }
 
-        /* 脚注样式 */
-        .footnotes {
-            border-top: 1px solid var(--border);
-            margin-top: 2rem;
-            padding-top: 1.2rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        .footnotes ol { padding-left: 1.5rem; }
-        .footnotes li { margin-bottom: 0.8em; }
-        .footnotes li p { margin: 0; }
-        .footnote-ref {
-            text-decoration: none;
-            color: #555;
-            font-weight: 500;
-        }
-
         /* 加载提示 */
         #loading {
             text-align: center;
@@ -255,7 +298,7 @@
             padding: 1rem;
         }
 
-        /* 打印样式 */
+        /* ──────────────── 打印样式 ──────────────── */
         @media print {
             body {
                 background: white;
@@ -276,7 +319,23 @@
                 display: none !important;
             }
             @page { margin: 1.8cm; }
-            .footnote-ref, .footnote-backref { text-decoration: underline; }
+            .footnote-ref, .footnote-backref {
+                text-decoration: underline;
+            }
+
+            /* 加粗 → 红色粗体 */
+            strong { color: red; }
+            /* 斜体 → 蓝色斜体 */
+            em { color: blue; font-style: italic; }
+
+            /* 打印时脚注卡片简化 */
+            .footnotes li {
+                background: none;
+                border: 1px solid #ccc;
+                padding: 0.8rem 1rem;
+                margin-bottom: 0.8rem;
+                break-inside: avoid;
+            }
         }
 
         /* 移动端适配 */
