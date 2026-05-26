@@ -184,22 +184,26 @@
             overflow-wrap: break-word;
         }
 
-        /* 板块标题呼吸感 */
-        #result h2 {
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.3rem;
-            border-bottom: 1px solid #e0ded9;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
+        /* 三级标题：每个句子赏析的标题 */
         #result h3 {
-            margin-top: 1.8rem;
-            margin-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.6rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px dashed #d5d1cb;  /* 轻虚线分隔 */
+            font-weight: 600;
         }
+        
+        /* 段落 */
         #result p {
-            margin-bottom: 1rem;
+            margin-bottom: 0.6rem;
             line-height: 1.7;
+        }
+        
+        /* 句子赏析中 <br> 产生的换行保持紧凑 */
+        #result br {
+            display: block;
+            content: "";
+            margin-top: 0.3rem;
         }
 
         /* ───── 脚注卡片 + 序号 ───── */
@@ -318,7 +322,7 @@
             .footnotes {
                 page-break-after: always;
             }
-
+            
             /* 打印时脚注卡片简化 */
             .footnotes li {
                 background: none;
