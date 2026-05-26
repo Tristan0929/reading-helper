@@ -44,12 +44,10 @@
             gap: 1.8rem;
         }
 
-        /* 头部区域 */
         .header {
             text-align: center;
             margin-bottom: 0.5rem;
         }
-
         .header h1 {
             font-size: 2rem;
             font-weight: 600;
@@ -57,13 +55,11 @@
             color: var(--accent);
             margin-bottom: 0.4rem;
         }
-
         .header .subtitle {
             font-size: 0.95rem;
             color: var(--muted);
         }
 
-        /* 使用说明卡片 */
         .guide {
             background: var(--card);
             border-radius: var(--radius);
@@ -71,27 +67,23 @@
             padding: 1.8rem 2rem;
             border: 1px solid var(--border);
         }
-
         .guide h2 {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1rem;
             color: var(--accent);
         }
-
         .steps {
             display: flex;
             gap: 1.5rem;
             flex-wrap: wrap;
         }
-
         .step {
             flex: 1 1 180px;
             display: flex;
             gap: 0.8rem;
             align-items: flex-start;
         }
-
         .step-number {
             width: 28px;
             height: 28px;
@@ -106,19 +98,16 @@
             flex-shrink: 0;
             margin-top: 2px;
         }
-
         .step-content {
             font-size: 0.9rem;
             color: var(--text);
         }
-
         .step-content strong {
             display: block;
             margin-bottom: 0.2rem;
             font-weight: 600;
         }
 
-        /* 输入卡片 */
         .input-card {
             background: var(--card);
             border-radius: var(--radius);
@@ -129,13 +118,11 @@
             flex-direction: column;
             gap: 1rem;
         }
-
         .input-group {
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
         }
-
         .input-group label {
             font-size: 0.85rem;
             font-weight: 500;
@@ -143,7 +130,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         input[type="password"],
         textarea {
             width: 100%;
@@ -155,14 +141,12 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             font-family: inherit;
         }
-
         input[type="password"]:focus,
         textarea:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(0,0,0,0.03);
         }
-
         textarea {
             resize: vertical;
             min-height: 180px;
@@ -181,17 +165,14 @@
             transition: background 0.2s ease, transform 0.1s ease;
             letter-spacing: 0.3px;
         }
-
         .btn-primary:hover {
             background: var(--accent-hover);
             transform: translateY(-1px);
         }
-
         .btn-primary:active {
             transform: translateY(0);
         }
 
-        /* 结果区域 */
         #result {
             background: var(--card);
             border-radius: var(--radius);
@@ -203,9 +184,7 @@
             overflow-wrap: break-word;
         }
 
-        /* ──────────────── 以下为结果内部排版美化 ──────────────── */
-
-        /* 二级标题：板块之间有明显间隔 */
+        /* 板块标题呼吸感 */
         #result h2 {
             margin-top: 2.5rem;
             margin-bottom: 1rem;
@@ -214,20 +193,16 @@
             font-weight: 600;
             color: #1a1a1a;
         }
-
-        /* 三级标题：句子赏析中的每个句子标题 */
         #result h3 {
             margin-top: 1.8rem;
             margin-bottom: 0.5rem;
         }
-
-        /* 段落间距 */
         #result p {
             margin-bottom: 1rem;
             line-height: 1.7;
         }
 
-        /* ──────────────── 脚注美化（卡片式） ──────────────── */
+        /* ───── 脚注卡片 + 序号 ───── */
         .footnotes {
             margin-top: 2.5rem;
             padding-top: 1.5rem;
@@ -235,16 +210,18 @@
         }
 
         .footnotes ol {
-            list-style: none;
+            list-style: none;               /* 去掉默认数字 */
             padding-left: 0;
+            counter-reset: footnote-card;   /* 初始化计数器 */
         }
 
         .footnotes li {
             background: #fafaf9;
             border: 1px solid #eae7e2;
             border-radius: 10px;
-            padding: 1rem 1.2rem;
+            padding: 1rem 1.2rem 1rem 2rem;  /* 左侧留出序号位置 */
             margin-bottom: 1rem;
+            position: relative;
             transition: background 0.2s;
         }
 
@@ -252,9 +229,22 @@
             background: #f5f3f0;
         }
 
+        /* 自动序号 */
+        .footnotes li::before {
+            counter-increment: footnote-card;
+            content: counter(footnote-card) ". ";
+            position: absolute;
+            left: 1.2rem;
+            top: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
         .footnotes li p {
             margin: 0;
             line-height: 1.6;
+            padding-left: 0.5rem;  /* 与序号稍错开 */
         }
 
         .footnote-ref {
@@ -263,7 +253,7 @@
             font-weight: 500;
         }
 
-        /* 操作按钮容器 */
+        /* 操作按钮 */
         .action-bar {
             display: flex;
             gap: 0.8rem;
@@ -272,7 +262,6 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--border);
         }
-
         .btn-secondary {
             background: transparent;
             border: 1px solid var(--border);
@@ -284,13 +273,11 @@
             transition: background 0.2s ease, border-color 0.2s ease;
             font-weight: 500;
         }
-
         .btn-secondary:hover {
             background: #f5f5f5;
             border-color: #ccc;
         }
 
-        /* 加载提示 */
         #loading {
             text-align: center;
             color: var(--muted);
@@ -298,7 +285,7 @@
             padding: 1rem;
         }
 
-        /* ──────────────── 打印样式 ──────────────── */
+        /* ───── 打印样式 ───── */
         @media print {
             body {
                 background: white;
@@ -323,22 +310,25 @@
                 text-decoration: underline;
             }
 
-            /* 加粗 → 红色粗体 */
-            strong { color: red; }
-            /* 斜体 → 蓝色斜体 */
-            em { color: blue; font-style: italic; }
+            /* 红蓝标注 */
+            strong { color: #800020; }
+            em { color: #0047AB; font-style: italic; }
+
+            /* 词汇精析后强制换页，句子赏析从新页开始 */
+            .footnotes {
+                page-break-after: always;
+            }
 
             /* 打印时脚注卡片简化 */
             .footnotes li {
                 background: none;
                 border: 1px solid #ccc;
-                padding: 0.8rem 1rem;
+                padding: 0.8rem 1rem 0.8rem 2rem;
                 margin-bottom: 0.8rem;
                 break-inside: avoid;
             }
         }
 
-        /* 移动端适配 */
         @media (max-width: 600px) {
             .steps {
                 flex-direction: column;
@@ -348,13 +338,11 @@
 </head>
 <body>
     <div class="container">
-        <!-- 头部 -->
         <div class="header">
             <h1>📖 外刊阅读助手</h1>
             <p class="subtitle">深度拆解英文好词好句，一键导出 Markdown 与 PDF</p>
         </div>
 
-        <!-- 使用说明 -->
         <div class="guide">
             <h2>⚡ 三步开始</h2>
             <div class="steps">
@@ -382,7 +370,6 @@
             </div>
         </div>
 
-        <!-- 输入区域 -->
         <div class="input-card">
             <div class="input-group">
                 <label for="apiKeyInput">🔑 DeepSeek API Key</label>
@@ -395,10 +382,7 @@
             <button class="btn-primary" onclick="analyze()">🚀 开始分析</button>
         </div>
 
-        <!-- 加载状态 -->
         <div id="loading" style="display:none;">⏳ 正在深度分析中，请稍候...</div>
-
-        <!-- 结果展示区 -->
         <div id="result"></div>
     </div>
 
