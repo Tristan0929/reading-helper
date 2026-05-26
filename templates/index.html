@@ -334,6 +334,27 @@
                 flex-direction: column;
             }
         }
+    .progress-bar {
+        width: 100%;
+        max-width: 400px;
+        height: 4px;
+        background: #e0ded9;
+        border-radius: 2px;
+        margin: 1rem auto 0;
+        overflow: hidden;
+    }    
+    .progress-fill {
+        width: 30%;
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        animation: progress-slide 1.8s ease-in-out infinite;
+    }
+    @keyframes progress-slide {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(250%); }
+        100% { transform: translateX(-100%); }
+    }
     </style>
 </head>
 <body>
@@ -382,7 +403,14 @@
             <button class="btn-primary" onclick="analyze()">🚀 开始分析</button>
         </div>
 
-        <div id="loading" style="display:none;">⏳ 正在深度分析中，请稍候...</div>
+        <div id="loading" style="display:none;">
+            <div style="text-align:center; color: var(--muted);">
+                ⏳ 深度分析中，请稍候...
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
         <div id="result"></div>
     </div>
 
