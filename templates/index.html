@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外刊阅读助手</title>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.2/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-footnote@3.0.3/dist/markdown-it-footnote.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background: #f8f9fa;
+            color: #212529;
+        }
+        textarea, input[type="password"] {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        textarea { resize: vertical; }
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 0.8rem 1.5rem;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover { background: #0b5ed7; }
+        button.secondary { background: #6c757d; }
+        button.secondary:hover { background: #5c636a; }
+        #result {
+            margin-top: 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            line-height: 1.6;
+        }
+        /* 脚注样式优化 */
+        .footnotes {
+            border-top: 1px solid #dee2e6;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .footnotes ol { padding-left: 1.5rem; }
+        .footnotes li { margin-bottom: 0.8em; }   /* 脚注之间的间隔 */
+        .footnotes li p { margin: 0; }            /* 去除脚注内部段落间距，确保 <br> 换行紧凑 */
+        .footnote-ref {
+            text-decoration: none;
+            color: #0d6efd;
+        }
+
+        /* 打印样式 */
+        @media print {
+            @page { margin: 1.8cm; }              /* 打印边距，适中美观 */
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            body > *:not(#result) {
+                display: none !important;
+            }
+            #result {
+                display: block !important;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                border-radius: 0;
+            }
+            .no-print {
+                display: none !important;          /* 隐藏复制/导出按钮 */
+            }
+            .footnote-ref, .footnote-backref {
+                text-decoration: underline;       /* 保留脚注链接下划线 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>📖 外刊阅读助手</h1>
+    <p>粘贴英文文章，输入您的 <a href="https://platform.deepseek.com/api_keys" target="_blank">DeepSeek API Key</a>。</p>
+
+    <input type="password" id="apiKeyInput" placeholder="请输入您的 DeepSeek API Key (sk-...)" />
+    <textarea id="articleInput" placeholder="在此粘贴外刊文章..." rows="8"></textarea>
+
+    <div class="btn-group">
+        <button onclick="analyze()">🚀 开始分析（Expert 模型）</button>
+    </div>
+
+    <div id="loading" style="display:none; margin-top:1rem;">⏳ 分析中，请稍候...</div>
+    <div id="result"></div>
+
+    <script>
+        const md = window.markdownit({
+            html: true,
+            breaks: true,
+            linkify: true,
+            typographer: false
+        }).use(window.markdownitFootnote);
+
+        let lastMarkdown = '';
+
+        window.onload = function() {
+            const savedKey = localStorage.getItem('apiKey');
+            if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
+        };
+
+        function getApiKey() { return document.getElementById('apiKeyInput').value.trim(); }
+        function saveApiKey(key) { localStorage.setItem('apiKey', key); }
+
+        async function analyze() {
+            const apiKey = getApiKey();
+            if (!apiKey) return alert('请输入 API Key');
+            saveApiKey(apiKey);
+            const article = document.getElementById('articleInput').value.trim();
+            if (!article) return alert('请先粘贴文章');
+
+            showLoading();
+            document.getElementById('result').innerHTML = '';
+
+            try {
+                const resp = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ article: article, api_key: apiKey })
+                });
+                const data = await resp.json();
+                if (data.error) {
+                    document.getElementById('result').innerHTML = `<p style="color:red;">错误：${data.error}</p>`;
+                } else {
+                    lastMarkdown = data.result;
+                    const html = md.render(data.result);
+                    document.getElementById('result').innerHTML = `
+                        <div class="no-print" style="text-align:right; margin-bottom:1rem;">
+                            <button class="secondary" onclick="copyResult()">📋 复制 Markdown</button>
+                            <button class="secondary" onclick="exportPDF()">🖨️ 导出 PDF</button>
+                        </div>
+                        ${html}
+                    `;
+                }
+            } catch (e) {
+                document.getElementById('result').innerHTML = `<p style="color:red;">请求失败：${e.message}</p>`;
+            }
+            hideLoading();
+        }
+
+        function copyResult() {
+            if (!lastMarkdown) return alert('没有可复制的分析结果');
+            navigator.clipboard.writeText(lastMarkdown).then(() => {
+                alert('✅ Markdown 格式已复制，可直接粘贴到 Obsidian');
+            }).catch(() => alert('复制失败，请手动复制'));
+        }
+
+        function exportPDF() {
+            window.print();
+        }
+
+        function showLoading() { document.getElementById('loading').style.display = 'block'; }
+        function hideLoading() { document.getElementById('loading').style.display = 'none'; }
+    </script>
+</body>
+</html>
