@@ -397,6 +397,13 @@
                 <input type="password" id="apiKeyInput" placeholder="sk-..." autocomplete="off" />
             </div>
             <div class="input-group">
+                <label for="modelSelect">🧠 模型选择</label>
+                <select id="modelSelect" style="width:100%; padding:0.9rem 1rem; border:1px solid #e0ded9; border-radius:12px; font-size:0.95rem; background:#fafaf9;">
+                    <option value="deepseek-reasoner">Reasoner（最强，稍慢）</option>
+                    <option value="deepseek-chat" selected>Chat（快速，稳定）</option>
+                </select>
+            </div>
+            <div class="input-group">
                 <label for="articleInput">📄 外刊文章</label>
                 <textarea id="articleInput" placeholder="在此粘贴排版后的英文文章..."></textarea>
             </div>
@@ -447,7 +454,11 @@
                 const resp = await fetch('/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ article: article, api_key: apiKey })
+                    body: JSON.stringify({ 
+                        article: article, 
+                        api_key: apiKey,
+                        model: document.getElementById('modelSelect').value
+                    })
                 });
                 const data = await resp.json();
                 if (data.error) {
